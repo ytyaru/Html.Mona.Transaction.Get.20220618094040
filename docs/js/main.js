@@ -1,8 +1,8 @@
 window.addEventListener('DOMContentLoaded', async(event) => {
     try {
         window.mpurse.updateEmitter.removeAllListeners()
-          .on('stateChanged', async(isUnlocked) => { await initForm(); console.log(isUnlocked); })
-          .on('addressChanged', async(address) => { await initForm(address); console.log(address); });
+          .on('stateChanged', async(isUnlocked) => { await init(); console.log(isUnlocked); })
+          .on('addressChanged', async(address) => { await init(address); console.log(address); });
     } catch(e) { console.debug(e) }
     document.getElementById('get-transaction').addEventListener('click', async(event) => {
         const address = document.getElementById('address').value
@@ -13,9 +13,14 @@ window.addEventListener('DOMContentLoaded', async(event) => {
             console.debug(json)
             const gen = new MonaTransactionViewer(address)
             document.getElementById('export-transaction').innerHTML = gen.generate(json)
-            //console.debug(JSON.stringify(json))
         }
     });
+    async function init(address=null) {
+        if (window.hasOwnProperty('mpurse')) {
+            document.getElementById('address').value = address || await window.mpurse.getAddress()
+            document.getElementById('get-transaction').dispatchEvent(new Event('click'))
+        }
+    }
     /*
     async function initForm(addr=null) {
         const address = addr || (window.hasOwnProperty('mpurse')) ? await window.mpurse.getAddress() : null
@@ -217,6 +222,7 @@ window.addEventListener('DOMContentLoaded', async(event) => {
         console.debug(event.detail.error_description)
         Toaster.toast('キャンセルしました')
     });
+    init()
     // mpurseアドレスのプロフィール情報を取得する
     //initForm()
     // リダイレクト認証後

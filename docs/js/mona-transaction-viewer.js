@@ -21,7 +21,7 @@ class MonaTransactionViewer {
                 + `　<span><span id="received-count">${this.calcTotalReceivedCount(json)}</span>入</span>）`
     }
     #makeTime(date) { // date型
-        console.debug(date)
+        //console.debug(date)
         const iso = date.toISOString()
         const month = (date.getMonth()+1).toString().padStart(2, '0')
         const dates = date.getDate().toString().padStart(2, '0')
